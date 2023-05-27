@@ -81,7 +81,7 @@ function NavBar() {
                       .slice(0, index * 2 + 1)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
-                    setcurrentMoveNumber((prev) => index * 2 + 1);
+                    setcurrentMoveNumber(index * 2 + 1);
                   }}
                 >
                   {wm.move}
@@ -96,7 +96,7 @@ function NavBar() {
                       .slice(0, index * 2 + 2) // they come in pairs, black is 2nd (odd)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
-                    setcurrentMoveNumber((prev) => index * 2 + 2);
+                    setcurrentMoveNumber(index * 2 + 2);
                   }}
                 >
                   {bm.move}
@@ -118,10 +118,10 @@ function NavBar() {
         <PrimaryButton
           text="next"
           handleClick={() => {
-            setcurrentMoveNumber((prev) => prev + 1);
             const gameCopy = { ...game };
-            gameCopy.move(currentPgn.moves[currentMoveNumber]?.move);
+            gameCopy.move(currentPgn.moves[currentMoveNumber + 1]?.move);
             setGame(gameCopy);
+            setcurrentMoveNumber((prev) => prev + 1);
           }}
         />
       </div>

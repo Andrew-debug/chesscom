@@ -2,10 +2,11 @@ import React, { createContext, forwardRef, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 /////////
-import EvalBar from "../EvalBar/EvalBar";
+
 import GamesHisory from "../gamesHistory/GamesHisory";
 import NavBar from "../navBar/NavBar";
 import { serverIP } from "../../assets/data/config";
+import EvalBar from "../evalBar/EvalBar";
 
 // context
 export const ButtonContext = createContext();
@@ -44,7 +45,7 @@ function Board() {
   const [game, setGame] = useState(new Chess());
   const [currentPgn, setcurrentPgn] = useState();
   const [currentMoveNumber, setcurrentMoveNumber] = useState(-1); // TODO counter can't be > moves.length
-  const [currentEval, setcurrentEval] = useState(50); // cant request data with -1 move
+  const [currentEval, setcurrentEval] = useState({ score: 34, is_mate: false }); // cant request data with -1 move
   const evalFetch = async () => {
     const data = await (
       await fetch(
@@ -53,33 +54,23 @@ function Board() {
             pgn: game.pgn(),
           })
       )
-    ).text();
-    // setcurrentEval(data)
-    console.log(data);
+    ).json();
+    setcurrentEval(data);
   };
-  // useEffect(() => {
-  //   evalFetch();
-  // }, [currentMoveNumber]);
-
-  // useEffect(() => {
-  //   if (currentPgn) {
-  //     makeAMove(currentPgn.moves[currentMoveNumber]?.move);
-  //   }
-  // }, [currentMoveNumber]);
+  useEffect(() => {
+    if (currentMoveNumber !== -1) {
+      evalFetch();
+    } else {
+      setcurrentEval({ score: 34, is_mate: false });
+    }
+  }, [currentMoveNumber]);
 
   useEffect(() => {
     game.reset();
     setGame({ ...game });
+
     setcurrentMoveNumber(-1);
   }, [currentPgn]);
-
-  // function makeAMove(move) {
-  //   const gameCopy = { ...game };
-  //   const currentPgn = gameCopy.move(move);
-  //   setGame(gameCopy);
-  //   // console.log(game.pgn());
-  //   return currentPgn;
-  // }
 
   return (
     <div>
