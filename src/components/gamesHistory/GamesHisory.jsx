@@ -5,6 +5,7 @@ import pgnParser from "pgn-parser";
 ///////
 import { PgnContext } from "../board/Board";
 import staticData from "../../assets/data/tmp.json";
+import { serverIP } from "../../assets/data/config";
 
 const ArchivedGame = styled.div`
   width: 300px;
@@ -21,7 +22,7 @@ function GamesHisory() {
   const dataFetch = async () => {
     const data = await (
       await fetch(
-        "http://10.57.31.10:8080/get_games?" +
+        `http://${serverIP}:8080/get_games?` +
           new URLSearchParams({
             user_name: userName,
           })

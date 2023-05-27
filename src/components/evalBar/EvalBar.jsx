@@ -20,9 +20,10 @@ const WhiteBar = styled.div`
   transform: translate3d(0px, 79.0125%, 0px);
 `;
 
-function EvalBar() {
+function EvalBar({ currentEval }) {
   return (
     <Bar>
+      <div>{currentEval}</div>
       <WhiteBar />
     </Bar>
   );

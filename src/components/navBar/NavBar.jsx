@@ -81,6 +81,7 @@ function NavBar() {
                       .slice(0, index * 2 + 1)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
+                    setcurrentMoveNumber((prev) => index * 2 + 1);
                   }}
                 >
                   {wm.move}
@@ -95,6 +96,7 @@ function NavBar() {
                       .slice(0, index * 2 + 2) // they come in pairs, black is 2nd (odd)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
+                    setcurrentMoveNumber((prev) => index * 2 + 2);
                   }}
                 >
                   {bm.move}
