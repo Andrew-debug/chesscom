@@ -41,11 +41,30 @@ const CustomSquareRenderer = forwardRef((props, ref) => {
     </div>
   );
 });
+
+const Aboba = ({ gameReviewData, currentMoveNumber }) => {
+  if (currentMoveNumber < 0) return <div></div>;
+  const bestMove = <div>this is the best move </div>;
+  const blunder = <div>you've made a blunder</div>;
+  const currentReviewMove = gameReviewData.all_moves[currentMoveNumber];
+  return (
+    <div>
+      <div>
+        Your move is: {currentReviewMove.move}, score: {currentReviewMove.score}
+      </div>
+      <div>
+        Best computer move is: {currentReviewMove.pv_move}, score:
+        {currentReviewMove.pv_move_score}
+      </div>
+    </div>
+  );
+};
 function Board() {
   const [game, setGame] = useState(new Chess());
   const [currentPgn, setcurrentPgn] = useState();
   const [currentMoveNumber, setcurrentMoveNumber] = useState(-1); // TODO counter can't be > moves.length
-  const [currentEval, setcurrentEval] = useState({ score: 34, is_mate: false }); // cant request data with -1 move
+  const [currentEval, setcurrentEval] = useState({ score: 0, is_mate: false }); // cant request data with -1 move
+  const [gameReviewData, setgameReviewData] = useState("");
   const evalFetch = async () => {
     const data = await (
       await fetch(
@@ -72,41 +91,61 @@ function Board() {
     setcurrentMoveNumber(-1);
   }, [currentPgn]);
 
+  const getGameReview = async () => {
+    const data = await (
+      await fetch(
+        `http://${serverIP}:8080/get_game_review?` +
+          new URLSearchParams({
+            pgn: currentPgn.rawPgn,
+          })
+      )
+    ).json();
+    setgameReviewData(data);
+    console.log(data);
+  };
   return (
     <div>
-      <button onClick={evalFetch}>getEval</button>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <PgnContext.Provider value={{ setcurrentPgn }}>
-          <GamesHisory />
-        </PgnContext.Provider>
-        <div>
-          <div style={{ display: "flex" }}>
-            <EvalBar currentEval={currentEval} />
+      <Aboba
+        gameReviewData={gameReviewData}
+        currentMoveNumber={currentMoveNumber}
+      />
+      <div>
+        <button onClick={() => getGameReview()}>get full game review</button>
+        <button onClick={evalFetch}>getEval</button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <PgnContext.Provider value={{ setcurrentPgn }}>
+            <GamesHisory />
+          </PgnContext.Provider>
+          <div>
             <div style={{ display: "flex" }}>
-              <Chessboard
-                // id="BasicBoard"
-                id="CustomSquare"
-                animationDuration={100}
-                boardWidth="560"
-                position={game.fen()}
-                customSquare={CustomSquareRenderer}
-              />
+              <EvalBar currentEval={currentEval} />
+              <div style={{ display: "flex" }}>
+                <Chessboard
+                  // id="BasicBoard"
+                  id="CustomSquare"
+                  animationDuration={100}
+                  boardWidth="560"
+                  position={game.fen()}
+                  customSquare={CustomSquareRenderer}
+                />
+              </div>
             </div>
           </div>
+          <ButtonContext.Provider
+            value={{
+              game,
+              setGame,
+              setcurrentMoveNumber,
+              currentPgn,
+              currentMoveNumber,
+            }}
+          >
+            <NavBar />
+          </ButtonContext.Provider>
         </div>
-        <ButtonContext.Provider
-          value={{
-            game,
-            setGame,
-            setcurrentMoveNumber,
-            currentPgn,
-            currentMoveNumber,
-          }}
-        >
-          <NavBar />
-        </ButtonContext.Provider>
+        {JSON.stringify(currentPgn)}
+        {JSON.stringify(currentPgn)}
       </div>
-      {JSON.stringify(currentPgn)}
     </div>
   );
 }

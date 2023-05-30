@@ -81,10 +81,10 @@ function NavBar() {
                       .slice(0, index * 2 + 1)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
-                    setcurrentMoveNumber(index * 2 + 1);
+                    setcurrentMoveNumber(index * 2);
                   }}
                 >
-                  {wm.move}
+                  {wm?.move}
                 </div>
                 {"_:_"}
                 <div
@@ -96,10 +96,10 @@ function NavBar() {
                       .slice(0, index * 2 + 2) // they come in pairs, black is 2nd (odd)
                       .forEach((item) => gameCopy.move(item.move));
                     setGame(gameCopy);
-                    setcurrentMoveNumber(index * 2 + 2);
+                    setcurrentMoveNumber(index * 2 + 1);
                   }}
                 >
-                  {bm.move}
+                  {bm?.move}
                 </div>
               </div>
               {/* {wm.move_number}. {wm.move} : {bm.move} */}

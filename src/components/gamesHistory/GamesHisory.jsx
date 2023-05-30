@@ -49,6 +49,7 @@ function GamesHisory() {
         </button>
         {gamesData.slice(0, 20).map((item, index) => {
           const pgn = pgnParser.parse(item.pgn)[0];
+          pgn.rawPgn = item.pgn;
           const whiteName = pgn.headers[4].value;
           const blackName = pgn.headers[5].value;
           return (
