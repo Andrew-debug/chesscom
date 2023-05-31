@@ -1,22 +1,35 @@
 import React, { useContext } from "react";
 import PrimaryButton from "../buttons/PrimaryButton";
 import styled from "styled-components";
-import { ButtonContext } from "../board/Board";
+import { NavBarContext } from "../board/Board";
 import _ from "lodash";
+import ReviewMsg from "../reviewMsg/ReviewMsg";
+import BlackWhiteMove from "./blackWhiteMove/BlackWhiteMove";
+import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
+import Loader from "../loader/Loader";
+import ChartComponent from "../chart/ChartComponent";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   width: 500px;
   height: 800px;
   background-color: var(--black-primary);
   max-width: 500px;
   max-height: 800px;
 `;
+const HorizontalMoveList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 230px;
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 10px 15px;
+  font-size: 14px;
+`;
 function NavBar() {
   const { game, setGame, setcurrentMoveNumber, currentPgn, currentMoveNumber } =
-    useContext(ButtonContext);
+    useContext(NavBarContext);
   const whiteMoves = [];
   const blackMoves = [];
   if (currentPgn) {
@@ -28,85 +41,22 @@ function NavBar() {
       }
     });
   }
-
   const allMoves = _.zip(whiteMoves, blackMoves);
-  // if (currentPgn) {
-  //   let tmp = true;
-  //   const movesList = [];
-  //   for (let index = 0; index < currentPgn.moves.length / 2; index++) {
-  //     movesList.push({
-  //       move_number: index,
-  //     });
-  //   }
-  //   currentPgn.moves.forEach((item) => {
-  //     if (tmp) {
-  //       movesList[item["move_number"] - 1]["white"] = item["move"];
-  //     } else {
-  //       movesList[item["move_number"] - 1]["black"] = item["move"];
-  //     }
-  //     tmp = !tmp;
-  //   });
-  //   console.log(movesList);
-  // }
   return (
     <Container>
-      <div
-        style={{
-          minWidth: 400,
-          maxHeight: 600,
-          overflowX: "hidden",
-          overflow: "auto",
-          color: "var(--white-primary)",
-          border: "1px solid white",
-          margin: 10,
-        }}
-      >
+      <Loader size="0.5" />
+      <ChartComponent />
+      <PossibleEngineMoves />
+      <HorizontalMoveList>
         {allMoves.map(([wm, bm], index) => {
           return (
-            <div
-              key={index}
-              style={{
-                backgroundColor:
-                  Math.trunc(currentMoveNumber / 2) === index && "green",
-              }}
-            >
-              <div style={{ display: "flex" }}>
-                <div>{wm.move_number}.</div>
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    const gameCopy = { ...game };
-                    gameCopy.reset();
-                    currentPgn.moves
-                      .slice(0, index * 2 + 1)
-                      .forEach((item) => gameCopy.move(item.move));
-                    setGame(gameCopy);
-                    setcurrentMoveNumber(index * 2);
-                  }}
-                >
-                  {wm?.move}
-                </div>
-                {"_:_"}
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    const gameCopy = { ...game };
-                    gameCopy.reset();
-                    currentPgn.moves
-                      .slice(0, index * 2 + 2) // they come in pairs, black is 2nd (odd)
-                      .forEach((item) => gameCopy.move(item.move));
-                    setGame(gameCopy);
-                    setcurrentMoveNumber(index * 2 + 1);
-                  }}
-                >
-                  {bm?.move}
-                </div>
-              </div>
-              {/* {wm.move_number}. {wm.move} : {bm.move} */}
+            <div key={index} style={{ display: "flex" }}>
+              <BlackWhiteMove wm={wm} bm={bm} index={index} />
             </div>
           );
         })}
-      </div>
+      </HorizontalMoveList>
+      <ReviewMsg />
       <div>
         <PrimaryButton
           text={"prev"}

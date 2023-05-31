@@ -9,7 +9,7 @@ import { serverIP } from "../../assets/data/config";
 import EvalBar from "../evalBar/EvalBar";
 
 // context
-export const ButtonContext = createContext();
+export const NavBarContext = createContext();
 export const PgnContext = createContext();
 //
 const CustomSquareRenderer = forwardRef((props, ref) => {
@@ -42,29 +42,12 @@ const CustomSquareRenderer = forwardRef((props, ref) => {
   );
 });
 
-const Aboba = ({ gameReviewData, currentMoveNumber }) => {
-  if (currentMoveNumber < 0) return <div></div>;
-  const bestMove = <div>this is the best move </div>;
-  const blunder = <div>you've made a blunder</div>;
-  const currentReviewMove = gameReviewData.all_moves[currentMoveNumber];
-  return (
-    <div>
-      <div>
-        Your move is: {currentReviewMove.move}, score: {currentReviewMove.score}
-      </div>
-      <div>
-        Best computer move is: {currentReviewMove.pv_move}, score:
-        {currentReviewMove.pv_move_score}
-      </div>
-    </div>
-  );
-};
 function Board() {
   const [game, setGame] = useState(new Chess());
   const [currentPgn, setcurrentPgn] = useState();
   const [currentMoveNumber, setcurrentMoveNumber] = useState(-1); // TODO counter can't be > moves.length
   const [currentEval, setcurrentEval] = useState({ score: 0, is_mate: false }); // cant request data with -1 move
-  const [gameReviewData, setgameReviewData] = useState("");
+  const [gameReviewData, setgameReviewData] = useState();
   const evalFetch = async () => {
     const data = await (
       await fetch(
@@ -76,18 +59,17 @@ function Board() {
     ).json();
     setcurrentEval(data);
   };
-  useEffect(() => {
-    if (currentMoveNumber !== -1) {
-      evalFetch();
-    } else {
-      setcurrentEval({ score: 34, is_mate: false });
-    }
-  }, [currentMoveNumber]);
+  // useEffect(() => {
+  //   if (currentMoveNumber !== -1) {
+  //     evalFetch();
+  //   } else {
+  //     setcurrentEval({ score: 34, is_mate: false });
+  //   }
+  // }, [currentMoveNumber]);
 
   useEffect(() => {
     game.reset();
     setGame({ ...game });
-
     setcurrentMoveNumber(-1);
   }, [currentPgn]);
 
@@ -105,10 +87,6 @@ function Board() {
   };
   return (
     <div>
-      <Aboba
-        gameReviewData={gameReviewData}
-        currentMoveNumber={currentMoveNumber}
-      />
       <div>
         <button onClick={() => getGameReview()}>get full game review</button>
         <button onClick={evalFetch}>getEval</button>
@@ -131,17 +109,18 @@ function Board() {
               </div>
             </div>
           </div>
-          <ButtonContext.Provider
+          <NavBarContext.Provider
             value={{
               game,
               setGame,
               setcurrentMoveNumber,
               currentPgn,
               currentMoveNumber,
+              gameReviewData,
             }}
           >
             <NavBar />
-          </ButtonContext.Provider>
+          </NavBarContext.Provider>
         </div>
         {JSON.stringify(currentPgn)}
         {JSON.stringify(currentPgn)}

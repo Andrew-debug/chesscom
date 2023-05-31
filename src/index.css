@@ -4,6 +4,7 @@
   font-weight: 400;
   --black-primary: rgb(39, 37, 34);
   --white-primary: rgb(245, 245, 248);
+  --white-primary-dim: rgba(245, 245, 248, 0.9);
 }
 body {
   background-color: rgb(49, 46, 43);
