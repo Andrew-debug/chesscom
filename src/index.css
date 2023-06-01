@@ -3,6 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   --black-primary: rgb(39, 37, 34);
+  --gray: rgb(86, 83, 82);
   --white-primary: rgb(245, 245, 248);
   --white-primary-dim: rgba(245, 245, 248, 0.9);
 }

@@ -2,9 +2,57 @@ import React, { useContext } from "react";
 import { NavBarContext } from "../../board/Board";
 import { BlackStyles, WhiteStyles } from "./blackWhiteMoveStyles";
 
-function BlackWhiteMove({ wm, bm, index }) {
+function BlackWhiteMove({ wm, bm, index, gameReviewData }) {
   const { game, setGame, currentMoveNumber, setcurrentMoveNumber, currentPgn } =
     useContext(NavBarContext);
+  const moveGrade = {
+    blunder: "red",
+    best: "green",
+  };
+  let white_color;
+  let black_color;
+  if (gameReviewData) {
+    const white_moves_review = gameReviewData.all_moves.filter(
+      (_, index) => index % 2 === 0
+    );
+    const black_moves_review = gameReviewData.all_moves.filter(
+      (_, index) => index % 2 !== 0
+    );
+    const white_scorr_diff =
+      white_moves_review[index].score -
+      (black_moves_review[index - 1]
+        ? black_moves_review[index - 1].score
+        : 33);
+
+    const black_scorr_diff = black_moves_review[index]
+      ? black_moves_review[index].score - white_moves_review[index].score
+      : 0;
+
+    function evalDiffToColor(evalDiff) {
+      if (evalDiff < 10 && evalDiff > -10) {
+        return "white";
+      } else {
+        if (evalDiff > 0) {
+          if (evalDiff > 40) {
+            return "blue";
+          } else {
+            return "green";
+          }
+        } else {
+          if (evalDiff > -40) {
+            return "pink";
+          } else {
+            return "red";
+          }
+        }
+      }
+    }
+    white_color = evalDiffToColor(white_scorr_diff);
+    black_color = evalDiffToColor(-black_scorr_diff);
+  } else {
+    white_color = "white";
+    black_color = "white";
+  }
   return (
     <>
       <div
@@ -17,6 +65,7 @@ function BlackWhiteMove({ wm, bm, index }) {
         {wm.move_number}.
       </div>
       <WhiteStyles
+        style={{ color: white_color }}
         currentMoveNumber={currentMoveNumber}
         index={index}
         onClick={() => {
@@ -32,6 +81,7 @@ function BlackWhiteMove({ wm, bm, index }) {
         {wm?.move}
       </WhiteStyles>
       <BlackStyles
+        style={{ color: black_color }}
         currentMoveNumber={currentMoveNumber}
         index={index}
         onClick={() => {

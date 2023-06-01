@@ -6,13 +6,18 @@ import _ from "lodash";
 import ReviewMsg from "../reviewMsg/ReviewMsg";
 import BlackWhiteMove from "./blackWhiteMove/BlackWhiteMove";
 import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
-import Loader from "../loader/Loader";
 import ChartComponent from "../chart/ChartComponent";
-const Container = styled.div`
+import { IconButton } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+export const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  width: 500px;
-  height: 800px;
+  width: 400px;
+  height: 100vh;
   background-color: var(--black-primary);
   max-width: 500px;
   max-height: 800px;
@@ -28,8 +33,14 @@ const HorizontalMoveList = styled.div`
   font-size: 14px;
 `;
 function NavBar() {
-  const { game, setGame, setcurrentMoveNumber, currentPgn, currentMoveNumber } =
-    useContext(NavBarContext);
+  const {
+    game,
+    setGame,
+    setcurrentMoveNumber,
+    currentPgn,
+    currentMoveNumber,
+    gameReviewData,
+  } = useContext(NavBarContext);
   const whiteMoves = [];
   const blackMoves = [];
   if (currentPgn) {
@@ -44,20 +55,26 @@ function NavBar() {
   const allMoves = _.zip(whiteMoves, blackMoves);
   return (
     <Container>
-      <Loader size="0.5" />
-      <ChartComponent />
-      <PossibleEngineMoves />
+      <div style={{ margin: 10 }}>
+        <ChartComponent gameReviewData={gameReviewData} />
+      </div>
+      {/* <PossibleEngineMoves /> */}
       <HorizontalMoveList>
         {allMoves.map(([wm, bm], index) => {
           return (
             <div key={index} style={{ display: "flex" }}>
-              <BlackWhiteMove wm={wm} bm={bm} index={index} />
+              <BlackWhiteMove
+                gameReviewData={gameReviewData}
+                wm={wm}
+                bm={bm}
+                index={index}
+              />
             </div>
           );
         })}
       </HorizontalMoveList>
       <ReviewMsg />
-      <div>
+      <div style={{ position: "absolute", bottom: 0 }}>
         <PrimaryButton
           text={"prev"}
           handleClick={() => {
@@ -74,6 +91,30 @@ function NavBar() {
             setcurrentMoveNumber((prev) => prev + 1);
           }}
         />
+        <IconButton
+          sx={{ color: "var(--white-primary)" }}
+          aria-label="First Move"
+        >
+          <KeyboardDoubleArrowLeftIcon />
+        </IconButton>
+        <IconButton
+          sx={{ color: "var(--white-primary)" }}
+          aria-label="Previous Move"
+        >
+          <NavigateBeforeIcon />
+        </IconButton>
+        <IconButton
+          sx={{ color: "var(--white-primary)" }}
+          aria-label="Next Move"
+        >
+          <NavigateNextIcon />
+        </IconButton>
+        <IconButton
+          sx={{ color: "var(--white-primary)" }}
+          aria-label="Last Move"
+        >
+          <KeyboardDoubleArrowRightIcon />
+        </IconButton>
       </div>
     </Container>
   );
