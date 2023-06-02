@@ -1,46 +1,18 @@
-import React, { createContext, forwardRef, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 /////////
-
 import GamesHisory from "../gamesHistory/GamesHisory";
 import NavBar from "../navBar/NavBar";
 import { serverIP } from "../../assets/data/config";
 import EvalBar from "../evalBar/EvalBar";
-
+import CustomSquareRenderer from "./CustomSquareRender";
+import staticGameReview from "../../assets/data/game-rev.json";
+import pgnParser from "pgn-parser";
 // context
 export const NavBarContext = createContext();
 export const PgnContext = createContext();
 //
-const CustomSquareRenderer = forwardRef((props, ref) => {
-  const { children, style } = props;
-  const [clicked, setclicked] = useState(false);
-  const [mouseDown, setmouseDown] = useState(false);
-  const st = clicked
-    ? {
-        ...style,
-        position: "relative",
-        backgroundColor: "rgba(203, 5, 2, 0.5)",
-      }
-    : { ...style, position: "relative" };
-
-  return (
-    <div
-      ref={ref}
-      style={st}
-      onContextMenu={() => {
-        if (mouseDown) {
-          setclicked(!clicked);
-          setmouseDown(false);
-        }
-      }}
-      onMouseDown={() => setmouseDown(true)}
-      onMouseLeave={() => setmouseDown(false)}
-    >
-      {children}
-    </div>
-  );
-});
 
 function Board() {
   const [game, setGame] = useState(new Chess());
@@ -59,13 +31,6 @@ function Board() {
     ).json();
     setcurrentEval(data);
   };
-  // useEffect(() => {
-  //   if (currentMoveNumber !== -1) {
-  //     evalFetch();
-  //   } else {
-  //     setcurrentEval({ score: 34, is_mate: false });
-  //   }
-  // }, [currentMoveNumber]);
 
   useEffect(() => {
     game.reset();
@@ -87,43 +52,75 @@ function Board() {
   };
   return (
     <div>
-      <div>
-        <button onClick={() => getGameReview()}>get full game review</button>
-        <button onClick={evalFetch}>getEval</button>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <PgnContext.Provider value={{ setcurrentPgn }}>
-            <GamesHisory />
-          </PgnContext.Provider>
-          <div>
-            <div style={{ display: "flex" }}>
-              <EvalBar currentEval={currentEval} />
-              <div style={{ display: "flex" }}>
-                <Chessboard
-                  // id="BasicBoard"
-                  id="CustomSquare"
-                  animationDuration={100}
-                  boardWidth="560"
-                  position={game.fen()}
-                  customSquare={CustomSquareRenderer}
-                />
-              </div>
-            </div>
-          </div>
-          <NavBarContext.Provider
-            value={{
-              game,
-              setGame,
-              setcurrentMoveNumber,
-              currentPgn,
-              currentMoveNumber,
-              gameReviewData,
+      <button onClick={() => getGameReview()}>get full game review</button>
+      <button onClick={() => setgameReviewData(staticGameReview)}>
+        static game review
+      </button>
+      <button onClick={evalFetch}>getEval</button>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <PgnContext.Provider value={{ setcurrentPgn }}>
+          <GamesHisory />
+        </PgnContext.Provider>
+        <div style={{ margin: "0 20px" }}>
+          <div
+            style={{
+              height: 40,
+              border: "1px solid white",
+              marginBottom: 10,
+              color: "white",
             }}
           >
-            <NavBar />
-          </NavBarContext.Provider>
+            <span style={{ display: "flex" }}>
+              <span style={{ marginRight: 10 }}>
+                {currentPgn ? currentPgn.headers[5].value : "Opponent"}
+              </span>
+              <span>
+                {currentPgn ? `(${currentPgn.headers[14].value})` : ""}
+              </span>
+            </span>
+          </div>
+          <div style={{ display: "flex" }}>
+            <EvalBar currentEval={currentEval} />
+            <div style={{ display: "flex" }}>
+              <Chessboard
+                id="CustomSquare"
+                animationDuration={100}
+                boardWidth="700"
+                position={game.fen()}
+                customSquare={CustomSquareRenderer}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              height: 40,
+              border: "1px solid white",
+              marginTop: 10,
+              color: "white",
+            }}
+          >
+            <span style={{ display: "flex" }}>
+              <span style={{ marginRight: 10 }}>
+                {currentPgn ? currentPgn.headers[4].value : "Opponent"}
+              </span>
+              <span>
+                {currentPgn ? `(${currentPgn.headers[13].value})` : ""}
+              </span>
+            </span>
+          </div>
         </div>
-        {JSON.stringify(currentPgn)}
-        {JSON.stringify(currentPgn)}
+        <NavBarContext.Provider
+          value={{
+            game,
+            setGame,
+            setcurrentMoveNumber,
+            currentPgn,
+            currentMoveNumber,
+            gameReviewData,
+          }}
+        >
+          <NavBar />
+        </NavBarContext.Provider>
       </div>
     </div>
   );

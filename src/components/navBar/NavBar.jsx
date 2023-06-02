@@ -1,17 +1,15 @@
 import React, { useContext } from "react";
-import PrimaryButton from "../buttons/PrimaryButton";
 import styled from "styled-components";
-import { NavBarContext } from "../board/Board";
 import _ from "lodash";
+
+//////
+import { NavBarContext } from "../board/Board";
 import ReviewMsg from "../reviewMsg/ReviewMsg";
 import BlackWhiteMove from "./blackWhiteMove/BlackWhiteMove";
 import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
 import ChartComponent from "../chart/ChartComponent";
-import { IconButton } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import NavButtons from "./NavButtons";
+
 export const Container = styled.div`
   position: relative;
   display: flex;
@@ -33,14 +31,8 @@ const HorizontalMoveList = styled.div`
   font-size: 14px;
 `;
 function NavBar() {
-  const {
-    game,
-    setGame,
-    setcurrentMoveNumber,
-    currentPgn,
-    currentMoveNumber,
-    gameReviewData,
-  } = useContext(NavBarContext);
+  const { currentPgn, gameReviewData } = useContext(NavBarContext);
+
   const whiteMoves = [];
   const blackMoves = [];
   if (currentPgn) {
@@ -53,6 +45,7 @@ function NavBar() {
     });
   }
   const allMoves = _.zip(whiteMoves, blackMoves);
+
   return (
     <Container>
       <div style={{ margin: 10 }}>
@@ -75,46 +68,7 @@ function NavBar() {
       </HorizontalMoveList>
       <ReviewMsg />
       <div style={{ position: "absolute", bottom: 0 }}>
-        <PrimaryButton
-          text={"prev"}
-          handleClick={() => {
-            game.undo();
-            setcurrentMoveNumber((prev) => (prev > -1 ? prev - 1 : prev));
-          }}
-        />
-        <PrimaryButton
-          text="next"
-          handleClick={() => {
-            const gameCopy = { ...game };
-            gameCopy.move(currentPgn.moves[currentMoveNumber + 1]?.move);
-            setGame(gameCopy);
-            setcurrentMoveNumber((prev) => prev + 1);
-          }}
-        />
-        <IconButton
-          sx={{ color: "var(--white-primary)" }}
-          aria-label="First Move"
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </IconButton>
-        <IconButton
-          sx={{ color: "var(--white-primary)" }}
-          aria-label="Previous Move"
-        >
-          <NavigateBeforeIcon />
-        </IconButton>
-        <IconButton
-          sx={{ color: "var(--white-primary)" }}
-          aria-label="Next Move"
-        >
-          <NavigateNextIcon />
-        </IconButton>
-        <IconButton
-          sx={{ color: "var(--white-primary)" }}
-          aria-label="Last Move"
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </IconButton>
+        <NavButtons />
       </div>
     </Container>
   );

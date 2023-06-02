@@ -6,6 +6,15 @@
   --gray: rgb(86, 83, 82);
   --white-primary: rgb(245, 245, 248);
   --white-primary-dim: rgba(245, 245, 248, 0.9);
+  --button-active: rgb(245, 245, 248, 0.6);
+  --button-disabled: rgba(245, 245, 248, 0.3);
+  --button-hovered: rgb(255, 255, 255);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 body {
   background-color: rgb(49, 46, 43);

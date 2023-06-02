@@ -30,17 +30,6 @@ function GamesHisory() {
   const [showData, setShowData] = useState(false);
   const [userName, setuserName] = useState("GothamChess");
   const { setcurrentPgn } = useContext(PgnContext);
-  const dataFetch = async () => {
-    const data = await (
-      await fetch(
-        `http://${serverIP}:8080/get_games?` +
-          new URLSearchParams({
-            user_name: userName,
-          })
-      )
-    ).json();
-    setgamesData(data.games.reverse());
-  };
 
   return (
     <Container>
@@ -83,16 +72,13 @@ function GamesHisory() {
                     .map((item, index) => {
                       const pgn = pgnParser.parse(item.pgn)[0];
                       pgn.rawPgn = item.pgn;
-                      const whiteName = pgn.headers[4].value;
-                      const blackName = pgn.headers[5].value;
                       return (
                         <ArchivedGame
                           key={index}
-                          whiteName={whiteName}
-                          blackName={blackName}
+                          item={item}
                           pgn={pgn}
                           setcurrentPgn={setcurrentPgn}
-                          url={item.url}
+                          userName={userName}
                         />
                       );
                     });
@@ -101,7 +87,6 @@ function GamesHisory() {
             )}
           </div>
 
-          <button onClick={dataFetch}>getdata</button>
           <button
             onClick={() => {
               setgamesData(staticData.games);
@@ -112,16 +97,13 @@ function GamesHisory() {
           {gamesData.slice(0, 20).map((item, index) => {
             const pgn = pgnParser.parse(item.pgn)[0];
             pgn.rawPgn = item.pgn;
-            const whiteName = pgn.headers[4].value;
-            const blackName = pgn.headers[5].value;
             return (
               <ArchivedGame
                 key={index}
-                whiteName={whiteName}
-                blackName={blackName}
+                item={item}
                 pgn={pgn}
                 setcurrentPgn={setcurrentPgn}
-                url={item.url}
+                userName={userName}
               />
             );
           })}
