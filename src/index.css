@@ -9,6 +9,9 @@
   --button-active: rgb(245, 245, 248, 0.6);
   --button-disabled: rgba(245, 245, 248, 0.3);
   --button-hovered: rgb(255, 255, 255);
+  --red: rgb(207, 72, 70);
+  --green: rgb(150, 188, 75);
+  --silver: rgb(195, 194, 193);
 }
 
 * {
@@ -21,7 +24,7 @@ body {
 }
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: var(--white-primary);
+  background-color: rgb(35, 33, 30);
 }
 ::-webkit-scrollbar {
   width: 10px;

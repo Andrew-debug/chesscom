@@ -8,7 +8,6 @@ import { serverIP } from "../../assets/data/config";
 import EvalBar from "../evalBar/EvalBar";
 import CustomSquareRenderer from "./CustomSquareRender";
 import staticGameReview from "../../assets/data/game-rev.json";
-import pgnParser from "pgn-parser";
 // context
 export const NavBarContext = createContext();
 export const PgnContext = createContext();
@@ -36,6 +35,8 @@ function Board() {
     game.reset();
     setGame({ ...game });
     setcurrentMoveNumber(-1);
+    setgameReviewData(); // reset
+    setcurrentEval({ score: 0, is_mate: false });
   }, [currentPgn]);
 
   const getGameReview = async () => {
@@ -117,6 +118,7 @@ function Board() {
             currentPgn,
             currentMoveNumber,
             gameReviewData,
+            setgameReviewData,
           }}
         >
           <NavBar />

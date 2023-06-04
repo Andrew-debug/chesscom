@@ -10,5 +10,6 @@ export default function FetchDataComponent({
   if (error) return <div>{error}</div>;
   if (!isLoaded) return <Loader size={loaderSize} />;
   if (!data) return null;
+  console.log(data);
   return children(data);
 }

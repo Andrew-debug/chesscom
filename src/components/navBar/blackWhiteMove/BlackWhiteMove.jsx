@@ -5,10 +5,7 @@ import { BlackStyles, WhiteStyles } from "./blackWhiteMoveStyles";
 function BlackWhiteMove({ wm, bm, index, gameReviewData }) {
   const { game, setGame, currentMoveNumber, setcurrentMoveNumber, currentPgn } =
     useContext(NavBarContext);
-  const moveGrade = {
-    blunder: "red",
-    best: "green",
-  };
+
   let white_color;
   let black_color;
   if (gameReviewData) {
@@ -19,13 +16,13 @@ function BlackWhiteMove({ wm, bm, index, gameReviewData }) {
       (_, index) => index % 2 !== 0
     );
     const white_scorr_diff =
-      white_moves_review[index].score -
+      white_moves_review[index]?.score -
       (black_moves_review[index - 1]
         ? black_moves_review[index - 1].score
         : 33);
 
     const black_scorr_diff = black_moves_review[index]
-      ? black_moves_review[index].score - white_moves_review[index].score
+      ? black_moves_review[index].score - white_moves_review[index]?.score
       : 0;
 
     function evalDiffToColor(evalDiff) {

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import _ from "lodash";
 
@@ -9,6 +9,9 @@ import BlackWhiteMove from "./blackWhiteMove/BlackWhiteMove";
 import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
 import ChartComponent from "../chart/ChartComponent";
 import NavButtons from "./NavButtons";
+import FetchDataComponent from "../FetchDataComponent";
+// import { fetchJSONData } from "../gamesHistory/GamesHisory";
+import { serverIP } from "../../assets/data/config";
 
 export const Container = styled.div`
   position: relative;
@@ -31,7 +34,9 @@ const HorizontalMoveList = styled.div`
   font-size: 14px;
 `;
 function NavBar() {
-  const { currentPgn, gameReviewData } = useContext(NavBarContext);
+  const [showData, setshowData] = useState(false);
+  const { currentPgn, gameReviewData, setgameReviewData } =
+    useContext(NavBarContext);
 
   const whiteMoves = [];
   const blackMoves = [];
@@ -67,6 +72,28 @@ function NavBar() {
         })}
       </HorizontalMoveList>
       <ReviewMsg />
+      {/* <FetchDataComponent
+          action={async () => {
+            const data = await fetchJSONData(
+              `http://${serverIP}:8080/get_game_review?` +
+                new URLSearchParams({
+                  pgn: currentPgn?.rawPgn,
+                })
+            )();
+            console.log(data);
+            setgameReviewData(data);
+          }}
+          loaderSize="0.5"
+        >
+        </FetchDataComponent> */}
+
+      <button
+        onClick={() => setshowData(true)}
+        disabled={currentPgn ? false : true}
+      >
+        show game review
+      </button>
+
       <div style={{ position: "absolute", bottom: 0 }}>
         <NavButtons />
       </div>

@@ -1,1 +1,1 @@
-export const serverIP = `10.57.31.6`;
+export const serverIP = `10.57.31.14`;
