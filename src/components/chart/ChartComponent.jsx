@@ -55,8 +55,6 @@ export default function ChartComponent({ gameReviewData }) {
         backgroundColor: gameReviewData.all_moves.map((value) =>
           value.score > 0 ? "white" : "black"
         ),
-        // borderColor: "gray",
-        // borderWidth: 1,
         data: gameReviewData.all_moves.map((item) => item.score / 100),
         minBarLength: 3,
       },

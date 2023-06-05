@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import useFetch from "../../assets/custom-hooks/useFetch";
+import { serverIP } from "../../assets/data/config";
 
 const Bar = styled.div`
   position: relative;
@@ -21,8 +23,22 @@ const BlackBar = styled.div`
     `translate3d(0px, ${100 - (evalScore / 100 + 5) * 10}%, 0px)`};
 `;
 
-function EvalBar({ currentEval }) {
-  const { score, is_mate: isMate } = currentEval;
+function EvalBar({ game }) {
+  const evalFetch = useFetch(null, { score: 0, is_mate: false }, true);
+  useEffect(() => {
+    if (game.pgn()) {
+      evalFetch.seturl(
+        `http://${serverIP}:8080/get_eval?` +
+          new URLSearchParams({
+            pgn: game.pgn(),
+          })
+      );
+    } else {
+      evalFetch.seturl(null);
+      evalFetch.resetData();
+    }
+  }, [game]);
+  const { score, is_mate: isMate } = evalFetch.data;
   let evalScore = score;
   if (score > 400) evalScore = 400;
   if (score < -400) evalScore = -400;

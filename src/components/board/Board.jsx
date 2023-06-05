@@ -4,38 +4,23 @@ import { Chess } from "chess.js";
 /////////
 import GamesHisory from "../gamesHistory/GamesHisory";
 import NavBar from "../navBar/NavBar";
-import { serverIP } from "../../assets/data/config";
 import EvalBar from "../evalBar/EvalBar";
 import CustomSquareRenderer from "./CustomSquareRender";
-import staticGameReview from "../../assets/data/game-rev.json";
 
 function Board() {
   const [game, setGame] = useState(new Chess());
   const [currentPgn, setcurrentPgn] = useState();
   const [currentMoveNumber, setcurrentMoveNumber] = useState(-1); // TODO counter can't be > moves.length
-  const [currentEval, setcurrentEval] = useState({ score: 0, is_mate: false }); // cant request data with -1 move
-  const evalFetch = async () => {
-    const data = await (
-      await fetch(
-        `http://${serverIP}:8080/get_eval?` +
-          new URLSearchParams({
-            pgn: game.pgn(),
-          })
-      )
-    ).json();
-    setcurrentEval(data);
-  };
-
   useEffect(() => {
     game.reset();
     setGame({ ...game });
     setcurrentMoveNumber(-1);
-    setcurrentEval({ score: 0, is_mate: false });
+    // setcurrentEval({ score: 0, is_mate: false });
   }, [currentPgn]);
 
   return (
     <div>
-      <button onClick={evalFetch}>getEval</button>
+      {/* <button onClick={evalFetch}>getEval</button> */}
       <div style={{ display: "flex", alignItems: "center" }}>
         <GamesHisory setcurrentPgn={setcurrentPgn} />
 
@@ -58,7 +43,7 @@ function Board() {
             </span>
           </div>
           <div style={{ display: "flex" }}>
-            <EvalBar currentEval={currentEval} />
+            <EvalBar game={game} />
             <div style={{ display: "flex" }}>
               <Chessboard
                 id="CustomSquare"

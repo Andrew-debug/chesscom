@@ -3,7 +3,6 @@ import styled from "styled-components";
 import pgnParser from "pgn-parser";
 
 ///////
-import staticData from "../../assets/data/tmp.json";
 import { serverIP } from "../../assets/data/config";
 import { Container } from "../navBar/NavBar";
 import ArchivedGame from "./ArchivedGame";
@@ -67,7 +66,6 @@ function GamesHisory({ setcurrentPgn }) {
             Use Chess.com username
           </div>
           <input
-            // value={username}
             defaultValue={defaultUser}
             onChange={(e) => {
               setUsername(e.target.value);
@@ -82,38 +80,6 @@ function GamesHisory({ setcurrentPgn }) {
           <button onClick={useGamesFetch.fetchDataAction}>Fetch Data</button>
         </InputWrap>
       </FetchComponent>
-      {/* <div
-        style={{
-          maxWidth: 500,
-          maxHeight: 800,
-          overflowX: "hidden",
-          overflow: "auto",
-        }}
-      >
-        <div>
-          <button
-            onClick={() => {
-              setgamesData(staticData.games);
-            }}
-          >
-            get static data
-          </button>
-          {gamesData.slice(0, 20).map((item, index) => {
-            const pgn = pgnParser.parse(item.pgn)[0];
-            pgn.rawPgn = item.pgn;
-            // console.log(item);
-            return (
-              <ArchivedGame
-                key={index}
-                item={item}
-                pgn={pgn}
-                setcurrentPgn={setcurrentPgn}
-                username={username}
-              />
-            );
-          })}
-        </div>
-      </div> */}
     </Container>
   );
 }

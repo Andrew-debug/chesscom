@@ -73,6 +73,7 @@ function NavButtons({
             }}
             onClick={() => {
               game.undo();
+              setGame({ ...game });
               setcurrentMoveNumber((prev) => (prev > -1 ? prev - 1 : prev));
             }}
             disabled={
