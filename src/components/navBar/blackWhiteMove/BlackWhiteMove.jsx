@@ -1,11 +1,16 @@
-import React, { useContext } from "react";
-import { NavBarContext } from "../../board/Board";
 import { BlackStyles, WhiteStyles } from "./blackWhiteMoveStyles";
 
-function BlackWhiteMove({ wm, bm, index, gameReviewData }) {
-  const { game, setGame, currentMoveNumber, setcurrentMoveNumber, currentPgn } =
-    useContext(NavBarContext);
-
+function BlackWhiteMove({
+  wm,
+  bm,
+  index,
+  gameReviewData,
+  currentPgn,
+  game,
+  setGame,
+  setcurrentMoveNumber,
+  currentMoveNumber,
+}) {
   let white_color;
   let black_color;
   if (gameReviewData) {

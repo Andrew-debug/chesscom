@@ -72,7 +72,12 @@ function ArchivedGame({ pgn, setcurrentPgn, item, username }) {
   const blackResult = item.black.result;
   return (
     <ArchivedGameContainer>
-      <GameWrap style={{ padding: 10 }} onClick={() => setcurrentPgn(pgn)}>
+      <GameWrap
+        style={{ padding: 10 }}
+        onClick={() => {
+          setcurrentPgn(pgn);
+        }}
+      >
         <div
           style={{
             display: "flex",

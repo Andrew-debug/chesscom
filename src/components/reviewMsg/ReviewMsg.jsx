@@ -1,8 +1,4 @@
-import React, { useContext } from "react";
-import { NavBarContext } from "../board/Board";
-
-function ReviewMsg() {
-  const { gameReviewData, currentMoveNumber } = useContext(NavBarContext);
+function ReviewMsg({ gameReviewData, currentMoveNumber }) {
   if (currentMoveNumber < 0 || gameReviewData === undefined) {
     return <div></div>;
   }

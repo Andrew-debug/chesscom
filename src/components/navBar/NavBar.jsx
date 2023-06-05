@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import _ from "lodash";
 
 //////
-import { NavBarContext } from "../board/Board";
 import ReviewMsg from "../reviewMsg/ReviewMsg";
 import BlackWhiteMove from "./blackWhiteMove/BlackWhiteMove";
 import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
 import ChartComponent from "../chart/ChartComponent";
 import NavButtons from "./NavButtons";
-import FetchDataComponent from "../FetchDataComponent";
 // import { fetchJSONData } from "../gamesHistory/GamesHisory";
 import { serverIP } from "../../assets/data/config";
+import FetchComponent from "../FetchComponent";
+import useFetch from "../../assets/custom-hooks/useFetch";
 
 export const Container = styled.div`
   position: relative;
@@ -33,11 +33,13 @@ const HorizontalMoveList = styled.div`
   padding: 10px 15px;
   font-size: 14px;
 `;
-function NavBar() {
-  const [showData, setshowData] = useState(false);
-  const { currentPgn, gameReviewData, setgameReviewData } =
-    useContext(NavBarContext);
-
+function NavBar({
+  currentPgn,
+  game,
+  setGame,
+  setcurrentMoveNumber,
+  currentMoveNumber,
+}) {
   const whiteMoves = [];
   const blackMoves = [];
   if (currentPgn) {
@@ -51,10 +53,21 @@ function NavBar() {
   }
   const allMoves = _.zip(whiteMoves, blackMoves);
 
+  const useGamesFetch = useFetch();
+  useEffect(() => {
+    useGamesFetch.resetData();
+    useGamesFetch.seturl(
+      `http://${serverIP}:8080/get_game_review?` +
+        new URLSearchParams({
+          pgn: currentPgn?.rawPgn,
+        })
+    );
+  }, [currentPgn]);
+
   return (
     <Container>
       <div style={{ margin: 10 }}>
-        <ChartComponent gameReviewData={gameReviewData} />
+        <ChartComponent gameReviewData={useGamesFetch.data} />
       </div>
       {/* <PossibleEngineMoves /> */}
       <HorizontalMoveList>
@@ -62,40 +75,38 @@ function NavBar() {
           return (
             <div key={index} style={{ display: "flex" }}>
               <BlackWhiteMove
-                gameReviewData={gameReviewData}
+                gameReviewData={useGamesFetch.data}
                 wm={wm}
                 bm={bm}
+                game={game}
                 index={index}
+                currentPgn={currentPgn}
+                setGame={setGame}
+                setcurrentMoveNumber={setcurrentMoveNumber}
+                currentMoveNumber={currentMoveNumber}
               />
             </div>
           );
         })}
       </HorizontalMoveList>
       <ReviewMsg />
-      {/* <FetchDataComponent
-          action={async () => {
-            const data = await fetchJSONData(
-              `http://${serverIP}:8080/get_game_review?` +
-                new URLSearchParams({
-                  pgn: currentPgn?.rawPgn,
-                })
-            )();
-            console.log(data);
-            setgameReviewData(data);
-          }}
-          loaderSize="0.5"
+      <FetchComponent useFetchStates={useGamesFetch} DataVisualisation={null}>
+        <button
+          onClick={useGamesFetch.fetchDataAction}
+          disabled={currentPgn ? false : true}
         >
-        </FetchDataComponent> */}
-
-      <button
-        onClick={() => setshowData(true)}
-        disabled={currentPgn ? false : true}
-      >
-        show game review
-      </button>
+          show game review
+        </button>
+      </FetchComponent>
 
       <div style={{ position: "absolute", bottom: 0 }}>
-        <NavButtons />
+        <NavButtons
+          game={game}
+          setGame={setGame}
+          setcurrentMoveNumber={setcurrentMoveNumber}
+          currentPgn={currentPgn}
+          currentMoveNumber={currentMoveNumber}
+        />
       </div>
     </Container>
   );

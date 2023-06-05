@@ -1,17 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { IconButton } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import Tooltip from "@mui/material/Tooltip";
-//
-import { NavBarContext } from "../board/Board";
 
-function NavButtons() {
+function NavButtons({
+  game,
+  setGame,
+  setcurrentMoveNumber,
+  currentPgn,
+  currentMoveNumber,
+}) {
   const [btnHover, setBtnHover] = useState(0);
-  const { game, setGame, setcurrentMoveNumber, currentPgn, currentMoveNumber } =
-    useContext(NavBarContext);
 
   return (
     <>
