@@ -3,7 +3,7 @@ import styled from "styled-components";
 import pgnParser from "pgn-parser";
 
 ///////
-import { serverIP } from "../../assets/data/config";
+import packageJson from "../../../package.json"
 import { Container } from "../navBar/NavBar";
 import ArchivedGame from "./ArchivedGame";
 import FetchComponent from "../FetchComponent";
@@ -29,7 +29,7 @@ function GamesHisory({ setcurrentPgn }) {
   const [username, setUsername] = useState("GothamChess");
   const defaultUser = "GothamChess";
   const defaultUserUrl =
-    `http://${serverIP}:8080/get_games?` +
+    `http://${packageJson.config.serverIP}:8080/get_games?` +
     new URLSearchParams({
       user_name: defaultUser,
     });
@@ -42,9 +42,9 @@ function GamesHisory({ setcurrentPgn }) {
           <GamesContainer>
             <button onClick={useGamesFetch.resetData}>{"<="}</button>
             {useGamesFetch.data &&
-              useGamesFetch.data.games
-                .reverse()
-                .slice(0, 20)
+              ([...useGamesFetch.data.games.slice(-20)]
+                .reverse())
+                // .slice(0, 20)
                 .map((item, index) => {
                   const pgn = pgnParser.parse(item.pgn)[0];
                   pgn.rawPgn = item.pgn;
@@ -70,10 +70,10 @@ function GamesHisory({ setcurrentPgn }) {
             onChange={(e) => {
               setUsername(e.target.value);
               useGamesFetch.seturl(
-                `http://${serverIP}:8080/get_games?` +
-                  new URLSearchParams({
-                    user_name: e.target.value,
-                  })
+                `http://${packageJson.config.serverIP}:8080/get_games?` +
+                new URLSearchParams({
+                  user_name: e.target.value,
+                })
               );
             }}
           />

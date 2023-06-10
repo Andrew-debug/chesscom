@@ -9,7 +9,7 @@ import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
 import ChartComponent from "../chart/ChartComponent";
 import NavButtons from "./NavButtons";
 // import { fetchJSONData } from "../gamesHistory/GamesHisory";
-import { serverIP } from "../../assets/data/config";
+import packageJson from "../../../package.json"
 import FetchComponent from "../FetchComponent";
 import useFetch from "../../assets/custom-hooks/useFetch";
 
@@ -57,10 +57,10 @@ function NavBar({
   useEffect(() => {
     useGamesFetch.resetData();
     useGamesFetch.seturl(
-      `http://${serverIP}:8080/get_game_review?` +
-        new URLSearchParams({
-          pgn: currentPgn?.rawPgn,
-        })
+      `http://${packageJson.config.serverIP}:8080/get_game_review?` +
+      new URLSearchParams({
+        pgn: currentPgn?.rawPgn,
+      })
     );
   }, [currentPgn]);
 

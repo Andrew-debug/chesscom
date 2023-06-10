@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useFetch from "../../assets/custom-hooks/useFetch";
-import { serverIP } from "../../assets/data/config";
+import packageJson from "../../../package.json"
 
 const Bar = styled.div`
   position: relative;
@@ -28,7 +28,7 @@ function EvalBar({ game }) {
   useEffect(() => {
     if (game.pgn()) {
       evalFetch.seturl(
-        `http://${serverIP}:8080/get_eval?` +
+        `http://${packageJson.config.serverIP}:8080/get_eval?` +
           new URLSearchParams({
             pgn: game.pgn(),
           })

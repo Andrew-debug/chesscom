@@ -1,8 +1,8 @@
 import Board from "./components/board/Board";
-function App() {
+function App({ stockfishInterface }) {
   return (
     <div>
-      <Board />
+      <Board stockfishInterface={stockfishInterface} />
     </div>
   );
 }
