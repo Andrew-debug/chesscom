@@ -12,6 +12,8 @@ function NavButtons({
   setcurrentMoveNumber,
   currentPgn,
   currentMoveNumber,
+  piecesTurn,
+  setPiecesTurn,
 }) {
   const [btnHover, setBtnHover] = useState(0);
 
@@ -19,7 +21,7 @@ function NavButtons({
     <>
       <Tooltip
         title={
-          currentPgn ? (currentMoveNumber === -1 ? null : "Last Move") : null
+          currentPgn ? (currentMoveNumber === -1 ? null : "First Move") : null
         }
         placement="top"
       >
@@ -75,6 +77,7 @@ function NavButtons({
               game.undo();
               setGame({ ...game });
               setcurrentMoveNumber((prev) => (prev > -1 ? prev - 1 : prev));
+              setPiecesTurn((prev) => (prev === "white" ? "black" : "white"));
             }}
             disabled={
               currentPgn ? (currentMoveNumber === -1 ? true : false) : true
@@ -91,7 +94,7 @@ function NavButtons({
           currentPgn
             ? currentMoveNumber === currentPgn?.moves.length - 1
               ? null
-              : "Last Move"
+              : "Next Move"
             : null
         }
         placement="top"
@@ -112,6 +115,7 @@ function NavButtons({
               gameCopy.move(currentPgn.moves[currentMoveNumber + 1]?.move);
               setGame(gameCopy);
               setcurrentMoveNumber((prev) => prev + 1);
+              setPiecesTurn((prev) => (prev === "white" ? "black" : "white"));
             }}
             disabled={
               currentPgn

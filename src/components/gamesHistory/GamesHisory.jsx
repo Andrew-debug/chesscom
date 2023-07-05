@@ -1,17 +1,18 @@
+"use client";
 import React, { useState } from "react";
 import styled from "styled-components";
 import pgnParser from "pgn-parser";
 
 ///////
-import packageJson from "../../../package.json"
-import { Container } from "../navBar/NavBar";
+import packageJson from "../../../package.json";
 import ArchivedGame from "./ArchivedGame";
 import FetchComponent from "../FetchComponent";
 import useFetch from "../../assets/custom-hooks/useFetch";
+import { Container } from "../navBar/NavBar";
 
 const GamesContainer = styled.div`
-  max-width: 500;
-  max-height: 800;
+  max-width: 500px;
+  max-height: 800px;
   overflow-x: hidden;
   overflow: "auto";
 `;
@@ -27,13 +28,10 @@ const InputWrap = styled.div`
 
 function GamesHisory({ setcurrentPgn }) {
   const [username, setUsername] = useState("GothamChess");
-  const defaultUser = "GothamChess";
-  const defaultUserUrl =
-    `http://${packageJson.config.serverIP}:8080/get_games?` +
-    new URLSearchParams({
-      user_name: defaultUser,
-    });
-  const useGamesFetch = useFetch(defaultUserUrl);
+
+  const useGamesFetch = useFetch(
+    `https://api.chess.com/pub/player/${username}/games/2023/06`
+  );
   return (
     <Container>
       <FetchComponent
@@ -42,8 +40,8 @@ function GamesHisory({ setcurrentPgn }) {
           <GamesContainer>
             <button onClick={useGamesFetch.resetData}>{"<="}</button>
             {useGamesFetch.data &&
-              ([...useGamesFetch.data.games.slice(-20)]
-                .reverse())
+              [...useGamesFetch.data.games.slice(-20)]
+                .reverse()
                 // .slice(0, 20)
                 .map((item, index) => {
                   const pgn = pgnParser.parse(item.pgn)[0];
@@ -66,15 +64,9 @@ function GamesHisory({ setcurrentPgn }) {
             Use Chess.com username
           </div>
           <input
-            defaultValue={defaultUser}
+            defaultValue={username}
             onChange={(e) => {
               setUsername(e.target.value);
-              useGamesFetch.seturl(
-                `http://${packageJson.config.serverIP}:8080/get_games?` +
-                new URLSearchParams({
-                  user_name: e.target.value,
-                })
-              );
             }}
           />
           <button onClick={useGamesFetch.fetchDataAction}>Fetch Data</button>

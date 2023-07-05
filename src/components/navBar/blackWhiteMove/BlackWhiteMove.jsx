@@ -10,6 +10,7 @@ function BlackWhiteMove({
   setGame,
   setcurrentMoveNumber,
   currentMoveNumber,
+  setPiecesTurn,
 }) {
   let white_color;
   let black_color;
@@ -78,6 +79,8 @@ function BlackWhiteMove({
             .forEach((item) => gameCopy.move(item.move));
           setGame(gameCopy);
           setcurrentMoveNumber(index * 2);
+          // pass turn
+          setPiecesTurn("black");
         }}
       >
         {wm?.move}
@@ -94,6 +97,7 @@ function BlackWhiteMove({
             .forEach((item) => gameCopy.move(item.move));
           setGame(gameCopy);
           setcurrentMoveNumber(index * 2 + 1);
+          setPiecesTurn("white");
         }}
       >
         {bm?.move}

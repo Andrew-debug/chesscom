@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useFetch from "../../assets/custom-hooks/useFetch";
-import packageJson from "../../../package.json"
+import packageJson from "../../../package.json";
 
 const Bar = styled.div`
   position: relative;
@@ -23,25 +23,39 @@ const BlackBar = styled.div`
     `translate3d(0px, ${100 - (evalScore / 100 + 5) * 10}%, 0px)`};
 `;
 
-function EvalBar({ game }) {
-  const evalFetch = useFetch(null, { score: 0, is_mate: false }, true);
-  useEffect(() => {
-    if (game.pgn()) {
-      evalFetch.seturl(
-        `http://${packageJson.config.serverIP}:8080/get_eval?` +
-          new URLSearchParams({
-            pgn: game.pgn(),
-          })
-      );
-    } else {
-      evalFetch.seturl(null);
-      evalFetch.resetData();
-    }
-  }, [game]);
-  const { score, is_mate: isMate } = evalFetch.data;
-  let evalScore = score;
-  if (score > 400) evalScore = 400;
-  if (score < -400) evalScore = -400;
+function EvalBar({ game, bestMove, positionEval, piecesTurn, setPiecesTurn }) {
+  // const [evaluation, setEvaluation] = useState(30);
+  // const [latestDependency, setLatestDependency] = useState(positionEval);
+
+  // useEffect(() => {
+  //   let isMounted = true;
+
+  //   if (isMounted && latestDependency === positionEval) {
+  //     setEvaluation(positionEval);
+  //     if (piecesTurn === "black") {
+  //       setEvaluation((prev) => prev * -1);
+  //     }
+  //   }
+
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [positionEval, latestDependency]);
+
+  // useEffect(() => {
+  //   setLatestDependency(positionEval);
+  // }, [positionEval]);
+
+  // let evalScore = evaluation;
+  // if (evaluation > 400) evalScore = 400;
+  // if (evaluation < -400) evalScore = -400;
+
+  if (piecesTurn === "black") {
+    positionEval = positionEval * -1;
+  }
+  let evalScore = positionEval;
+  if (positionEval > 400) evalScore = 400;
+  if (positionEval < -400) evalScore = -400;
   return (
     <Bar>
       <div
@@ -54,13 +68,13 @@ function EvalBar({ game }) {
       >
         <div
           style={{
-            color: score > 0 ? "black" : "white",
+            color: positionEval > 0 ? "black" : "white",
             position: "absolute",
-            top: score > 0 ? 530 : 0,
+            top: positionEval > 0 ? 530 : 0,
             left: 12,
           }}
         >
-          {(score / 100).toFixed(1)}
+          {(positionEval / 100).toFixed(1)}
         </div>
       </div>
       <BlackBar evalScore={evalScore} />

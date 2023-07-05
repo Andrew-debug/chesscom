@@ -9,7 +9,7 @@ import PossibleEngineMoves from "./possibleEngineMoves/PossibleEngineMoves";
 import ChartComponent from "../chart/ChartComponent";
 import NavButtons from "./NavButtons";
 // import { fetchJSONData } from "../gamesHistory/GamesHisory";
-import packageJson from "../../../package.json"
+import packageJson from "../../../package.json";
 import FetchComponent from "../FetchComponent";
 import useFetch from "../../assets/custom-hooks/useFetch";
 
@@ -39,6 +39,8 @@ function NavBar({
   setGame,
   setcurrentMoveNumber,
   currentMoveNumber,
+  piecesTurn,
+  setPiecesTurn,
 }) {
   const whiteMoves = [];
   const blackMoves = [];
@@ -58,9 +60,9 @@ function NavBar({
     useGamesFetch.resetData();
     useGamesFetch.seturl(
       `http://${packageJson.config.serverIP}:8080/get_game_review?` +
-      new URLSearchParams({
-        pgn: currentPgn?.rawPgn,
-      })
+        new URLSearchParams({
+          pgn: currentPgn?.rawPgn,
+        })
     );
   }, [currentPgn]);
 
@@ -84,6 +86,7 @@ function NavBar({
                 setGame={setGame}
                 setcurrentMoveNumber={setcurrentMoveNumber}
                 currentMoveNumber={currentMoveNumber}
+                setPiecesTurn={setPiecesTurn}
               />
             </div>
           );
@@ -106,6 +109,8 @@ function NavBar({
           setcurrentMoveNumber={setcurrentMoveNumber}
           currentPgn={currentPgn}
           currentMoveNumber={currentMoveNumber}
+          piecesTurn={piecesTurn}
+          setPiecesTurn={setPiecesTurn}
         />
       </div>
     </Container>
